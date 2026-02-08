@@ -1,8 +1,9 @@
-# yaml-language-server: $schema=https://render.com/static/schema/render.yaml
+# yaml-language-server: $schema=.vscode/render.schema.json
 services:
   - type: "web"
     name: pradhan-chemistry-classes
-    env: "python"
+    runtime: "python"
+    plan: "free"
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
     startCommand: gunicorn Pradhan_Chemistry_Classes.wsgi:application
     envVars:
