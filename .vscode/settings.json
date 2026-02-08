@@ -1,0 +1,12 @@
+{
+    "snyk.advanced.organization": "e0514983-005f-46d3-bc34-1a856618ef65",
+    "snyk.advanced.autoSelectOrganization": true,
+    "yaml.schemas": {
+        ".vscode/render.schema.json": [
+            "render.yaml",
+            ".render.yaml",
+            "**/render.yaml"
+        ]
+    },
+    "yaml.schemaStore.enable": false
+}

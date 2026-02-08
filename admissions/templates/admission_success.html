@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <span class="eyebrow">Admission ID #{{ admission.id }}</span>
+    <h2>Admission Submitted</h2>
+    <p class="muted">Keep your Admission ID safe for student login.</p>
+
+    <div class="grid two">
+        <div class="card">
+            <h3>Student Details</h3>
+            <p><strong>Name:</strong> {{ admission.student.name }}</p>
+            <p><strong>Class:</strong> {{ admission.student_class }}</p>
+            <p><strong>Board:</strong> {{ admission.board }}</p>
+            <p><strong>Medium:</strong> {{ admission.medium }}</p>
+            <p><strong>Batch:</strong> {% if admission.batch %}{{ admission.batch.name }} ({{ admission.batch.timing }}){% else %}Will be assigned by admin{% endif %}</p>
+        </div>
+        <div class="card">
+            <h3>Fee Summary</h3>
+            <p><strong>Fee Amount:</strong> &#8377;{{ admission.fee_amount }}</p>
+            <p><strong>Fee Status:</strong> {{ admission.fee_status }}</p>
+            <p><strong>Date:</strong> {{ admission.created_at|date:"d M Y, h:i A" }}</p>
+        </div>
+    </div>
+</div>
+
+{% if payment %}
+    <div class="card" style="margin-top: 20px;">
+        <h3>Payment</h3>
+        <p><strong>Status:</strong>
+            {% if payment.status == "Paid" %}
+                <span class="badge success">Paid</span>
+            {% elif payment.status == "Failed" %}
+                <span class="badge danger">Failed</span>
+            {% else %}
+                <span class="badge warning">Pending</span>
+            {% endif %}
+        </p>
+        {% if payment.reference_id %}
+            <p><strong>Reference:</strong> {{ payment.reference_id }}</p>
+        {% endif %}
+        {% if payment.status != "Paid" %}
+            <a class="btn" href="{% url 'start_payment' admission.id %}">Pay Now</a>
+            {% if payment_gateway == "PhonePe" %}
+                <a class="btn ghost" href="{% url 'phonepe_status_check' admission.id %}">Check PhonePe Status</a>
+            {% endif %}
+            {% if not online_payment_ready %}
+                <p class="muted">Online payment is not configured yet. Please pay at the center.</p>
+            {% endif %}
+        {% endif %}
+        {% if upi_link %}
+            <a class="btn ghost" href="{{ upi_link }}">Pay Now (UPI)</a>
+            <p class="muted">UPI ID: {{ upi_id }}</p>
+        {% endif %}
+    </div>
+{% endif %}
+
+<div style="margin-top: 16px;">
+    <a class="btn" href="{% url 'receipt_pdf' admission.id %}">Download Receipt (PDF)</a>
+    <a class="btn outline" href="/">Back to Home</a>
+</div>
+{% endblock %}

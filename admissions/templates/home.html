@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">Admission Open</span>
+        <h1>XI and XII Chemistry that feels clear, confident, and exam-ready.</h1>
+        <p class="lead">Weekly concept building, smart practice, and focused guidance for board and competitive preparation.</p>
+        <div class="hero-actions">
+            <a class="btn" href="/admission/">Register Now</a>
+            <a class="btn ghost" href="https://wa.me/916201268433?text=I%20want%20admission%20in%20Chemistry">Chat on WhatsApp</a>
+            <a class="btn outline" href="{% url 'student_login' %}">Student Dashboard</a>
+        </div>
+        <div class="hero-strip">
+            <div class="strip-item">Live fee updates</div>
+            <div class="strip-item">Seats tracked in real-time</div>
+            <div class="strip-item">Admin-managed batches</div>
+        </div>
+    </div>
+    <div class="card">
+        <span class="eyebrow">Fee Calculator</span>
+        <h3>Select class and medium</h3>
+        <form method="get" class="filter-form">
+            <div class="field">
+                <label for="class">Class</label>
+                <select id="class" name="class">
+                    {% for value, label in class_choices %}
+                        <option value="{{ value }}" {% if value == selected_class %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label for="medium">Medium</label>
+                <select id="medium" name="medium">
+                    {% for value, label in medium_choices %}
+                        <option value="{{ value }}" {% if value == selected_medium %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn" type="submit">Check Fee</button>
+        </form>
+
+        {% if plan_missing %}
+            <p class="muted">Fee plan not set yet for Class {{ selected_class }} {{ selected_medium }}.</p>
+        {% else %}
+            {% if show_offer %}
+                <div class="price-line">
+                    <span class="price-old">&#8377;{{ original_fee }}</span>
+                    <span class="badge warning">Offer</span>
+                </div>
+                <div class="price-new">&#8377;{{ offer_fee }}</div>
+                <p class="muted">Offer valid till {{ offer_end }}</p>
+            {% else %}
+                <div class="price-new">&#8377;{{ original_fee }}</div>
+                <p class="muted">Current fee for selected class and medium.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</section>
+
+<section class="grid">
+    <div class="card">
+        <h3>Institute Details</h3>
+        <p class="muted">Address: Veer Kunwar Singh Colony, Near Power House, Buxar, Bihar 802101</p>
+        <p class="muted">Director: Anu Pradhan</p>
+    </div>
+</section>
+
+<section class="grid two">
+    <div class="card">
+        <h3>Batch Availability</h3>
+        {% if batches %}
+            <p class="muted">Seats left: {{ total_remaining }}</p>
+            <div class="batch-list">
+                {% for batch in batches %}
+                    <div class="batch-item">
+                        <div>
+                            <strong>{{ batch.name }}</strong>
+                            <div class="muted">{{ batch.timing }}</div>
+                        </div>
+                        {% if batch.is_full %}
+                            <span class="badge danger">Full</span>
+                        {% else %}
+                            <span class="badge success">{{ batch.remaining_seats }} seats</span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="muted">Batch availability: Yes. Admin will assign after admission.</p>
+        {% endif %}
+    </div>
+    <div class="card">
+        <h3>Why Students Join</h3>
+        <ul>
+            <li>Clear chapter planning and weekly progress</li>
+            <li>Personal guidance for boards and revision</li>
+            <li>Dedicated support through WhatsApp</li>
+        </ul>
+    </div>
+</section>
+
+{% if notices %}
+<section class="grid">
+    <div class="card">
+        <h3>Notices</h3>
+        <div class="notice-list">
+            {% for notice in notices %}
+                <div class="notice-item">
+                    <strong>{{ notice.title }}</strong>
+                    <p>{{ notice.message }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

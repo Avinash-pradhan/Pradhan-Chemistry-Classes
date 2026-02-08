@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <span class="eyebrow">Online Admission</span>
+        <h2>Student Admission Form</h2>
+        <p class="muted">Fee will be calculated automatically based on class and medium.</p>
+        {% if no_batches %}
+            <p class="muted">Batch will be assigned by admin after admission.</p>
+        {% endif %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button class="btn" type="submit">Submit Admission</button>
+    </form>
+</div>
+{% endblock %}

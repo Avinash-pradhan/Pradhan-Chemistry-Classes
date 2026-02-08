@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://render.com/static/schema/render.yaml
+services:
+  - type: "web"
+    name: pradhan-chemistry-classes
+    env: "python"
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: gunicorn Pradhan_Chemistry_Classes.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "0"
+      - key: ALLOWED_HOSTS
+        value: ""
+      - key: SECURE_SSL_REDIRECT
+        value: "1"
+      - key: SESSION_COOKIE_SECURE
+        value: "1"
+      - key: CSRF_COOKIE_SECURE
+        value: "1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pradhan-chemistry-db
+          property: connectionString
+      - key: PAYMENT_GATEWAY
+        value: Razorpay
+      - key: PAYMENT_RECEIVER_NAME
+        value: Pradhan Chemistry Classes
+      - key: INVOICE_TITLE
+        value: Pradhan Chemistry Classes
+      - key: INVOICE_SUBTITLE
+        value: Fee Receipt
+      - key: INVOICE_ADDRESS
+        value: "Veer Kunwar Singh Colony, Near Power House, Buxar, Bihar 802101 | Director: Anu Pradhan"
+      - key: INVOICE_WATERMARK_TEXT
+        value: Pradhan Chemistry Classes
+      - key: INVOICE_QR_TEMPLATE
+        value: ""
+      - key: RAZORPAY_KEY_ID
+        value: ""
+      - key: RAZORPAY_KEY_SECRET
+        value: ""
+      - key: PHONEPE_MERCHANT_ID
+        value: ""
+      - key: PHONEPE_SALT_KEY
+        value: ""
+      - key: PHONEPE_SALT_INDEX
+        value: ""
+      - key: PHONEPE_BASE_URL
+        value: https://api.phonepe.com/apis/hermes
+      - key: PHONEPE_VERIFY_CALLBACK
+        value: "1"
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        value: ""
+      - key: WHATSAPP_ACCESS_TOKEN
+        value: ""
+      - key: TWILIO_ACCOUNT_SID
+        value: ""
+      - key: TWILIO_AUTH_TOKEN
+        value: ""
+      - key: TWILIO_FROM_NUMBER
+        value: ""
+
+databases:
+  - name: pradhan-chemistry-db
+    plan: free
